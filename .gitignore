@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Pytest
+.pytest_cache/
+
+# Environment variables
+.env
+
+# Docker
+*.log
+
+# OS / Editor
+.DS_Store
+.vscode/
