@@ -6,7 +6,6 @@ from moto import mock_aws
 from app.consumer import process_message
 
 
-
 @mock_aws
 def test_process_message_logs_correct_output(capsys):
     """
@@ -33,7 +32,8 @@ def test_process_message_logs_correct_output(capsys):
 @mock_aws
 def test_message_deleted_after_successful_processing():
     """
-    Verify message is deleted after successful processing
+    Verify that after successful processing, the message can be deleted
+    (Deletion itself is handled by the consumer loop, not process_message)
     """
 
     sqs = boto3.client("sqs", region_name="us-east-1")
@@ -52,12 +52,12 @@ def test_message_deleted_after_successful_processing():
     )
 
     messages = sqs.receive_message(QueueUrl=queue_url)["Messages"]
-
     assert len(messages) == 1
 
-    # simulate processing
+    # simulate successful processing
     process_message(messages[0]["Body"])
 
+    # simulate deletion (normally done by consumer loop)
     sqs.delete_message(
         QueueUrl=queue_url,
         ReceiptHandle=messages[0]["ReceiptHandle"]
@@ -71,7 +71,8 @@ def test_message_deleted_after_successful_processing():
 @mock_aws
 def test_message_not_deleted_on_processing_failure():
     """
-    Verify message is NOT deleted if processing fails
+    Verify that invalid messages raise an error and therefore
+    should NOT be deleted by the consumer
     """
 
     sqs = boto3.client("sqs", region_name="us-east-1")

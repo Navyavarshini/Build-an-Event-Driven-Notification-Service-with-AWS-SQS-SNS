@@ -18,7 +18,7 @@ Ensure the following tools are installed on your system:
     Docker Compose
     Python 3.9+ (required only for running end-to-end tests from host)
     Git
-
+R
 AWS / LocalStack Configuration
 
 This project uses AWS SNS and SQS.
